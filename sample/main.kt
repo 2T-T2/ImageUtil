@@ -8,5 +8,5 @@ fun main( args: Array<String> ) {
 
     val imgUtil = ImageUtil(f);
     imgUtil.addBorderText( "Hello World !", Font(Font.SERIF, Font.PLAIN, 30), Color.white, Color.black, 30, 30, 2 );
-    imgUtil.save( /* 出力ファイルパス */ );
+    imgUtil.save( /* 出力ファイルパス */, ImageExt.PNG );
 }
