@@ -40,7 +40,7 @@ class ImageUtil( img :BufferedImage ){
             g.dispose();
         }
     }
-    fun resize(wScale: Double, hScale: Double) { resize( img.width*wScale , img.height*hScale); }
+    fun resize(wScale: Double, hScale: Double) { resize( (img.width*wScale).toInt() , (img.height*hScale).toInt() ); }
 
     fun crop(x: Int, y: Int, width: Int, height: Int) {
         img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB).also {
@@ -476,7 +476,7 @@ class ImageUtil( img :BufferedImage ){
                     if( rect.contains(x, y) ) {
                         val col = Color( img.getRGB(x, y) );
                         Color.RGBtoHSB(col.red, col.green, col.blue, hsv);
-                        hsv[1] = min( saturation + hsv[1], 1.0f );
+                        hsv[1] = max( min( saturation + hsv[1], 1.0f ), 0.0f );
                         it.setRGB( x, y, Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]) );
                     }else {
                         it.setRGB(x, y, img.getRGB(x, y))
@@ -630,12 +630,12 @@ class ImageUtil( img :BufferedImage ){
         }
     }
 
-    fun edge( power: Int, amount: Float ) {
-        colorEdge( power, amount )
+    fun edge( power: Int ) {
+        colorEdge( power )
         setSaturation(0.0f);
     }
 
-    fun colorEdge( power: Int, amount: Float ) {
+    fun colorEdge( power: Int ) {
         val oldImg = getChangedImage();
         blur( power );
         val bluredImg = getChangedImage();
@@ -648,7 +648,7 @@ class ImageUtil( img :BufferedImage ){
                     val r = max( abs( ((oldRgb[0] - bluredRgb[0])).toInt() ), 0 );
                     val g = max( abs( ((oldRgb[1] - bluredRgb[1])).toInt() ), 0 );
                     val b = max( abs( ((oldRgb[2] - bluredRgb[2])).toInt() ), 0 );
-                    val rgba = if ( r == 0 && g == 0 && b == 0 ) 0 else changeRgbaFormat(r, g, b, (255*amount).toInt() )
+                    val rgba = if ( r == 0 && g == 0 && b == 0 ) 0 else changeRgbaFormat(r, g, b, 255 )
                     it.setRGB( x, y, rgba )
                 }
             }
